@@ -1,0 +1,14 @@
+{
+  "name": "proshop",
+  "version": "1.0.0",
+  "description": "MERN Shopping Card App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "author": "Desmond Oben",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
