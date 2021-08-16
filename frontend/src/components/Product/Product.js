@@ -7,6 +7,7 @@ import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Typography from "@material-ui/core/Typography";
 import Rating from "../Rating/Rating";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
@@ -19,9 +20,14 @@ const useStyles = makeStyles({
 
 const Product = ({ product }) => {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
-    <Card raised className={classes.root}>
+    <Card
+      raised
+      className={classes.root}
+      onClick={() => history.push(`/product/${product._id}`)}
+    >
       <CardActionArea>
         <CardMedia
           className={classes.media}

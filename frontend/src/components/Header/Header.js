@@ -8,11 +8,11 @@ import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
-import MenuIcon from "@material-ui/icons/Menu";
 import SearchIcon from "@material-ui/icons/Search";
 import AccountCircle from "@material-ui/icons/AccountCircle";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import MoreIcon from "@material-ui/icons/MoreVert";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -22,6 +22,7 @@ const useStyles = makeStyles((theme) => ({
     marginRight: theme.spacing(2),
   },
   title: {
+    cursor: "pointer",
     display: "none",
     [theme.breakpoints.up("sm")]: {
       display: "block",
@@ -81,6 +82,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Header = () => {
   const classes = useStyles();
+  const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
@@ -157,7 +159,12 @@ const Header = () => {
     <div className={classes.grow}>
       <AppBar position="static" color="transparent">
         <Toolbar>
-          <Typography className={classes.title} variant="h4" noWrap>
+          <Typography
+            onClick={() => history.push("/")}
+            className={classes.title}
+            variant="h4"
+            noWrap
+          >
             ProShop
           </Typography>
           <div className={classes.search}>
@@ -175,7 +182,11 @@ const Header = () => {
           </div>
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
-            <IconButton aria-label="show 4 new mails" color="inherit">
+            <IconButton
+              aria-label="show 4 new mails"
+              color="inherit"
+              onClick={() => history.push("/cart")}
+            >
               <Badge badgeContent={4} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
@@ -186,6 +197,7 @@ const Header = () => {
               aria-controls={menuId}
               aria-haspopup="true"
               // onClick={handleProfileMenuOpen}
+              onClick={() => history.push("/login")}
               color="inherit"
             >
               <AccountCircle />
