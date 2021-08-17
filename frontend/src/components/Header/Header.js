@@ -134,7 +134,11 @@ const Header = () => {
       onClose={handleMobileMenuClose}
     >
       <MenuItem>
-        <IconButton aria-label="show 4 new mails" color="inherit">
+        <IconButton
+          aria-label="show 4 new mails"
+          color="inherit"
+          onClick={() => history.push("/cart")}
+        >
           <Badge badgeContent={4} color="secondary">
             <ShoppingCartIcon />
           </Badge>
@@ -147,6 +151,7 @@ const Header = () => {
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
+          onClick={() => history.push("/login")}
         >
           <AccountCircle />
         </IconButton>

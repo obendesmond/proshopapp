@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import {
   Button,
@@ -9,8 +9,8 @@ import {
   Typography,
 } from "@material-ui/core";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
-import products from "../products";
 import Rating from "../components/Rating/Rating";
+import axios from "axios";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,11 +24,20 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
   },
 }));
+
 const ProductScreen = (props) => {
   const history = useHistory();
   const classes = useStyles();
+  const [product, setProduct] = useState({});
   const id = props.match.params.id;
-  const product = products.find((p) => p._id === id);
+
+  const fetchProduct = async () => {
+    const { data } = await axios.get(`/api/products/${id}`);
+    setProduct(data);
+  };
+  useEffect(() => {
+    fetchProduct();
+  }, []);
 
   return (
     <div className={classes.root}>
