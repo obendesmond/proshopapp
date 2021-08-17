@@ -49,10 +49,10 @@ const ProductScreen = (props) => {
         <KeyboardBackspaceIcon />
       </IconButton>
       <Grid container spacing={3} direction="row" justifyContent="space-around">
-        <Grid xs={12} md={6}>
+        <Grid item xs={12} md={6}>
           <img className={classes.img} src={product.image} alt={product.name} />
         </Grid>
-        <Grid container justifyContent="space-between" xs={12} md={4}>
+        <Grid item xs={12} md={4}>
           <Grid item xs={12}>
             <Typography variant="h4">{product.name}</Typography>
           </Grid>

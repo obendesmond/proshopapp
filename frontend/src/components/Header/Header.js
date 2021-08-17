@@ -89,9 +89,9 @@ const Header = () => {
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  const handleProfileMenuOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
+  // const handleProfileMenuOpen = (event) => {
+  //   setAnchorEl(event.currentTarget);
+  // };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -133,25 +133,23 @@ const Header = () => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
-      <MenuItem>
-        <IconButton
-          aria-label="show 4 new mails"
-          color="inherit"
-          onClick={() => history.push("/cart")}
-        >
+      <MenuItem onClick={() => history.push("/cart")}>
+        <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={4} color="secondary">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
         <p>Cart</p>
       </MenuItem>
-      <MenuItem onClick={handleProfileMenuOpen}>
+      <MenuItem
+        // onClick={handleProfileMenuOpen}
+        onClick={() => history.push("/login")}
+      >
         <IconButton
           aria-label="account of current user"
           aria-controls="primary-search-account-menu"
           aria-haspopup="true"
           color="inherit"
-          onClick={() => history.push("/login")}
         >
           <AccountCircle />
         </IconButton>
