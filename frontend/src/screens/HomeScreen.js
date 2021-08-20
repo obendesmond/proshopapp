@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Grid, makeStyles } from "@material-ui/core";
 import Product from "../components/Product/Product";
-import axios from "axios";
+import { listProducts } from "../actions/productActions";
+import Loader from "../components/Loader/Loader";
+import Message from "../components/Message/Message";
 
 const useStyles = makeStyles((theme) => ({
   con: {
@@ -14,40 +17,50 @@ const useStyles = makeStyles((theme) => ({
 
 const HomeScreen = () => {
   const classes = useStyles();
-  const [products, setProducts] = useState([]);
+  const [open, setOpen] = useState(true);
+  const dispatch = useDispatch();
+
+  const productList = useSelector((state) => state.productList);
+  const { loading, error, products } = productList;
 
   useEffect(() => {
-    const fetchProducts = async () => {
-      const { data } = await axios.get("/api/products");
-      setProducts(data);
-    };
-
-    fetchProducts();
-  }, []);
+    dispatch(listProducts());
+  }, [dispatch]);
 
   return (
     <>
       <h1>Latest Products</h1>
-      <Grid
-        className={classes.con}
-        container
-        direction="row"
-        justifyContent="center"
-        spacing={3}
-      >
-        {products.map((product) => (
-          <Grid
-            className={classes.smcon}
-            key={product._id}
-            item
-            xs={12}
-            sm={6}
-            md={4}
-          >
-            <Product product={product} />
-          </Grid>
-        ))}
-      </Grid>
+      {loading ? (
+        <Loader size={100} />
+      ) : error ? (
+        <Message
+          message={error}
+          close={() => setOpen(false)}
+          open={open}
+          severity="error"
+        />
+      ) : (
+        <Grid
+          className={classes.con}
+          container
+          direction="row"
+          justifyContent="center"
+          spacing={3}
+        >
+          {products.map((product) => (
+            <Grid
+              className={classes.smcon}
+              key={product._id}
+              item
+              xs={12}
+              sm={6}
+              md={4}
+            >
+              <Product product={product} />
+            </Grid>
+          ))}
+        </Grid>
+      )}
     </>
   );
 };
