@@ -13,6 +13,7 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { useHistory } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -85,6 +86,8 @@ const Header = () => {
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+  const cart = useSelector((state) => state.cart);
+  const { cartItems } = cart;
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -135,7 +138,7 @@ const Header = () => {
     >
       <MenuItem onClick={() => history.push("/cart")}>
         <IconButton aria-label="show 4 new mails" color="inherit">
-          <Badge badgeContent={4} color="secondary">
+          <Badge badgeContent={cartItems.length} color="secondary">
             <ShoppingCartIcon />
           </Badge>
         </IconButton>
@@ -190,7 +193,7 @@ const Header = () => {
               color="inherit"
               onClick={() => history.push("/cart")}
             >
-              <Badge badgeContent={4} color="secondary">
+              <Badge badgeContent={cartItems.length} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
             </IconButton>

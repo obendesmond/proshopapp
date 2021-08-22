@@ -17,6 +17,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { productDetails } from "../actions/productActions";
 import Loader from "../components/Loader/Loader";
 import Message from "../components/Message/Message";
+import { addToCart } from "../actions/cartActions";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,7 +55,8 @@ const ProductScreen = (props) => {
   }, [dispatch]);
 
   const addToCardHandler = () => {
-    history.push(`/cart/${id}?qty=${qty}`);
+    dispatch(addToCart(id, qty));
+    history.push("/cart");
   };
 
   return (
