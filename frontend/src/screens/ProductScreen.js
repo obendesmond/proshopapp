@@ -52,7 +52,7 @@ const ProductScreen = (props) => {
 
   useEffect(() => {
     dispatch(productDetails(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const addToCardHandler = () => {
     dispatch(addToCart(id, qty));
@@ -116,7 +116,7 @@ const ProductScreen = (props) => {
                 <Typography style={{ color: "red" }}>Out of Stock</Typography>
               )}
             </Grid>
-            <Grid item xs={12} direction="row">
+            <Grid item xs={12}>
               <Grid container direction="row">
                 <Typography>Qty: &nbsp;</Typography>
                 <FormControl className={classes.formControl}>

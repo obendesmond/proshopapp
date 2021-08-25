@@ -16,6 +16,7 @@ import {
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import XIcon from "@material-ui/icons/HighlightOff";
 import { addToCart, removeFromCart } from "../actions/cartActions";
+import { useHistory } from "react-router-dom";
 
 const useStyle = makeStyles((theme) => ({
   root: {
@@ -50,6 +51,7 @@ const useStyle = makeStyles((theme) => ({
 const CartScreen = (props) => {
   const classes = useStyle();
   const dispatch = useDispatch();
+  const history = useHistory();
   const cart = useSelector((state) => state.cart);
   const productId = props.match.params.id;
   // get the qty from url and convert it to a number
@@ -66,11 +68,11 @@ const CartScreen = (props) => {
 
   const qtyHandler = (id, qty) => {
     dispatch(addToCart(id, qty));
-    props.history.push("/cart");
+    history.push("/cart");
   };
 
   const checkoutHandler = () => {
-    props.history.push("/login?redirect=shipping");
+    history.push("/login?redirect=shipping");
   };
 
   return (
@@ -79,7 +81,7 @@ const CartScreen = (props) => {
         <Grid item xs={12} md={8}>
           <Grid container direction="row">
             <Typography variant="h3" className={classes.title}>
-              <Button onClick={() => props.history.push("/")}>
+              <Button onClick={() => history.push("/")}>
                 <ArrowBackIcon /> Back To Shop
               </Button>
               &nbsp; SHOPPING CART
@@ -97,7 +99,7 @@ const CartScreen = (props) => {
             >
               <Grid item xs={2}>
                 <img
-                  onClick={() => props.history.push(`/product/${item.product}`)}
+                  onClick={() => history.push(`/product/${item.product}`)}
                   className={classes.img}
                   src={item.image}
                   alt={item.name}
@@ -106,7 +108,7 @@ const CartScreen = (props) => {
               <Grid item xs={2}>
                 <Typography
                   className={classes.name}
-                  onClick={() => props.history.push(`/product/${item.product}`)}
+                  onClick={() => history.push(`/product/${item.product}`)}
                 >
                   {item.name}
                 </Typography>

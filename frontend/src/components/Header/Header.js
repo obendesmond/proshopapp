@@ -13,7 +13,9 @@ import AccountCircle from "@material-ui/icons/AccountCircle";
 import ShoppingCartIcon from "@material-ui/icons/ShoppingCart";
 import MoreIcon from "@material-ui/icons/MoreVert";
 import { useHistory } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { Button, Link } from "@material-ui/core";
+import { logout } from "../../actions/userActions";
 
 const useStyles = makeStyles((theme) => ({
   grow: {
@@ -81,20 +83,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Header = () => {
+const Header = (props) => {
   const classes = useStyles();
   const history = useHistory();
+  const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
-  // const handleProfileMenuOpen = (event) => {
-  //   setAnchorEl(event.currentTarget);
-  // };
+  const handleProfileMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   const handleMobileMenuClose = () => {
     setMobileMoreAnchorEl(null);
@@ -109,6 +114,16 @@ const Header = () => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+  const handleProfile = () => {
+    handleMenuClose();
+    history.push("/profile");
+  };
+
+  const handleLogout = () => {
+    handleMenuClose();
+    dispatch(logout());
+  };
+
   const menuId = "primary-search-account-menu";
   const renderMenu = (
     <Menu
@@ -120,8 +135,13 @@ const Header = () => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <Link
+        style={{ textDecoration: "none", color: "inherit" }}
+        onClick={() => handleProfile()}
+      >
+        <MenuItem>Profile</MenuItem>
+      </Link>
+      <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
     </Menu>
   );
 
@@ -144,20 +164,27 @@ const Header = () => {
         </IconButton>
         <p>Cart</p>
       </MenuItem>
-      <MenuItem
-        // onClick={handleProfileMenuOpen}
-        onClick={() => history.push("/login")}
-      >
-        <IconButton
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
+      {userInfo ? (
+        <MenuItem onClick={handleProfileMenuOpen}>
+          {/* <Button size="small">{userInfo.name}</Button> */}
+          <p>{userInfo.name}</p>
+        </MenuItem>
+      ) : (
+        <MenuItem
+          // onClick={handleProfileMenuOpen}
+          onClick={() => history.push("/login")}
         >
-          <AccountCircle />
-        </IconButton>
-        <p>Signin</p>
-      </MenuItem>
+          <IconButton
+            aria-label="account of current user"
+            aria-controls="primary-search-account-menu"
+            aria-haspopup="true"
+            color="inherit"
+          >
+            <AccountCircle />
+          </IconButton>
+          <p>Signin</p>
+        </MenuItem>
+      )}
     </Menu>
   );
 
@@ -196,18 +223,24 @@ const Header = () => {
               <Badge badgeContent={cartItems.length} color="secondary">
                 <ShoppingCartIcon />
               </Badge>
-            </IconButton>
-            <IconButton
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              // onClick={handleProfileMenuOpen}
-              onClick={() => history.push("/login")}
-              color="inherit"
-            >
-              <AccountCircle />
-            </IconButton>
+            </IconButton>{" "}
+            &nbsp;&nbsp;&nbsp;
+            {userInfo ? (
+              <Button size="small" onClick={handleProfileMenuOpen}>
+                {userInfo.name}
+              </Button>
+            ) : (
+              <IconButton
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={() => history.push("/login")}
+                color="inherit"
+              >
+                <AccountCircle />
+              </IconButton>
+            )}
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
