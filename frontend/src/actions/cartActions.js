@@ -1,4 +1,9 @@
-import { CART_ADD_ITEM, CART_REMOVE_ITEM } from "../constants/cartConstants";
+import {
+  CART_ADD_ITEM,
+  CART_REMOVE_ITEM,
+  CART_SAVE_PAYMENT_METHOD,
+  CART_SAVE_SHIPPING_ADDRESS,
+} from "../constants/cartConstants";
 import axios from "axios";
 
 /* getState gets our whole state tree and we can access any reducer as
@@ -31,4 +36,18 @@ export const removeFromCart = (id) => async (dispatch, getState) => {
     payload: id,
   });
   localStorage.setItem("cartItems", JSON.stringify(getState().cart.cartItems));
+};
+
+export const saveShippingAddress = (data) => async (dispatch) => {
+  dispatch({ type: CART_SAVE_SHIPPING_ADDRESS, payload: data });
+
+  // save shipping info in local storage
+  localStorage.setItem("shippingAddress", JSON.stringify(data));
+};
+
+export const savePaymentMethod = (data) => async (dispatch) => {
+  dispatch({ type: CART_SAVE_PAYMENT_METHOD, payload: data });
+
+  // save payment method in the local storage
+  localStorage.setItem("paymentMethod", JSON.stringify(data));
 };

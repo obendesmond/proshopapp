@@ -190,7 +190,7 @@ const Header = (props) => {
 
   return (
     <div className={classes.grow}>
-      <AppBar position="static" color="transparent">
+      <AppBar position="static" color="transparent" style={{ zIndex: 20 }}>
         <Toolbar>
           <Typography
             onClick={() => history.push("/")}

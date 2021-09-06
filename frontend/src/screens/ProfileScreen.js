@@ -10,9 +10,15 @@ import {
   CardContent,
   makeStyles,
   Grid,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
 } from "@material-ui/core";
+import DeleteIcon from "@material-ui/icons/Delete";
 import Form from "../components/Form/Form";
 import { useHistory } from "react-router-dom";
+import { getOrders } from "../actions/orderActions";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -31,6 +37,15 @@ const useStyles = makeStyles((theme) => ({
   orderCard: {
     padding: "50px",
   },
+  listItemContainer: {
+    width: "100%",
+  },
+  listItem: {
+    width: "100%",
+    padding: "20px",
+    marginBottom: "5px",
+    // backgroundColor: "lightgrey",
+  },
 }));
 
 const ProfileScreen = () => {
@@ -38,6 +53,7 @@ const ProfileScreen = () => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [open, setOpen] = useState(true);
+  const [orderOpen, setOrderOpen] = useState(true);
   const [successOpen, setSuccessOpen] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -53,12 +69,16 @@ const ProfileScreen = () => {
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
   const { success } = userUpdateProfile;
 
+  const orderGet = useSelector((state) => state.orderGet);
+  const { error: orderError, loading: orderLoading, orders } = orderGet;
+
   useEffect(() => {
     if (!userInfo) {
       history.push("/login");
     } else {
       if (!user || !user.name) {
         dispatch(getUserDetails("profile"));
+        dispatch(getOrders());
       } else {
         setName(user.name);
         setEmail(user.email);
@@ -118,6 +138,38 @@ const ProfileScreen = () => {
         <Grid item xs={12} md={8}>
           <div className={classes.orderCard}>
             <Typography variant="h4">Order Details</Typography>
+            {orderError && (
+              <Message
+                close={() => setOrderOpen(false)}
+                message={orderError}
+                severity="error"
+                open={orderOpen}
+              />
+            )}
+            {orderLoading && <Loader size={100} />}
+            <Grid container>
+              <List
+                component="nav"
+                aria-label="main mailbox folders"
+                className={classes.listItemContainer}
+              >
+                {orders?.map((order) => (
+                  <ListItem
+                    onClick={() => history.push(`/orders/${order._id}`)}
+                    className={classes.listItem}
+                    key={order._id}
+                    button
+                  >
+                    <ListItemText>
+                      <Typography> ORDER_ID: {order._id}</Typography>
+                    </ListItemText>
+                    <ListItemIcon>
+                      <DeleteIcon />
+                    </ListItemIcon>
+                  </ListItem>
+                ))}
+              </List>
+            </Grid>
           </div>
         </Grid>
       </Grid>

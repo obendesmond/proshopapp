@@ -14,6 +14,12 @@ import {
   userRegisterReducer,
   userUpdateProfileReducer,
 } from "./reducers/userReducers";
+import {
+  orderCreateReducer,
+  orderGetReducer,
+  orderDetailsReducer,
+  orderPayReducer,
+} from "./reducers/orderReducers";
 
 // combine reducers
 const reducer = combineReducers({
@@ -24,6 +30,10 @@ const reducer = combineReducers({
   userRegister: userRegisterReducer,
   userDetails: userDetailsReducer,
   userUpdateProfile: userUpdateProfileReducer,
+  orderCreate: orderCreateReducer,
+  orderGet: orderGetReducer,
+  orderDetails: orderDetailsReducer,
+  orderPay: orderPayReducer,
 });
 
 // get cart items from local storage if it's present and convert it to normal JS from JSON format
@@ -36,10 +46,22 @@ const userInfoFromStorage = localStorage.getItem("userInfo")
   ? JSON.parse(localStorage.getItem("userInfo"))
   : null;
 
+// get shippingAddress from local storage if it's present
+const shippingAddressFromStorage = localStorage.getItem("shippingAddress")
+  ? JSON.parse(localStorage.getItem("shippingAddress"))
+  : {};
+
+// get paymentMethod from local storage if it's present
+const paymentMethodFromStorage = localStorage.getItem("paymentMethod")
+  ? JSON.parse(localStorage.getItem("paymentMethod"))
+  : "PAYPAL";
+
 // initialise state with cartItems stored in the local storage
 const initialState = {
   cart: {
     cartItems: cartItemsFromStorage,
+    shippingAddress: shippingAddressFromStorage,
+    paymentMethod: paymentMethodFromStorage,
   },
   userLogin: {
     userInfo: userInfoFromStorage,

@@ -78,6 +78,8 @@ const LoginScreen = (props) => {
             password={password}
             setPassword={setPassword}
             submitBtnText="Login"
+            name={name}
+            setName={setName}
           />
         </CardContent>
         <CardActions>
