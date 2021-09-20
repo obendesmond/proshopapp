@@ -2,17 +2,19 @@ import express from "express";
 import {
   addOrderItems,
   getOrderById,
-  getOrders,
+  getMyOrders,
   updateOrderToPaid,
 } from "../controllers/orderController.js";
 import { protect } from "../middleware/authMiddleware.js";
 
 const router = express.Router();
 
+// all routes go to /api/orders
+
 // could use: router.('/', protect, addOrderItems)
 router.route("/").post(protect, addOrderItems);
 
-router.route("/").get(protect, getOrders);
+router.route("/myorders").get(protect, getMyOrders);
 
 router.route("/:id").get(protect, getOrderById);
 

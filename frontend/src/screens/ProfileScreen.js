@@ -10,13 +10,17 @@ import {
   CardContent,
   makeStyles,
   Grid,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
+  TableContainer,
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody,
+  Button,
 } from "@material-ui/core";
-import DeleteIcon from "@material-ui/icons/Delete";
 import Form from "../components/Form/Form";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { useHistory } from "react-router-dom";
 import { getOrders } from "../actions/orderActions";
 
@@ -36,6 +40,9 @@ const useStyles = makeStyles((theme) => ({
   },
   orderCard: {
     padding: "50px",
+  },
+  table: {
+    minWidth: 650,
   },
   listItemContainer: {
     width: "100%",
@@ -148,27 +155,68 @@ const ProfileScreen = () => {
             )}
             {orderLoading && <Loader size={100} />}
             <Grid container>
-              <List
-                component="nav"
-                aria-label="main mailbox folders"
-                className={classes.listItemContainer}
-              >
-                {orders?.map((order) => (
-                  <ListItem
-                    onClick={() => history.push(`/orders/${order._id}`)}
-                    className={classes.listItem}
-                    key={order._id}
-                    button
-                  >
-                    <ListItemText>
-                      <Typography> ORDER_ID: {order._id}</Typography>
-                    </ListItemText>
-                    <ListItemIcon>
-                      <DeleteIcon />
-                    </ListItemIcon>
-                  </ListItem>
-                ))}
-              </List>
+              <TableContainer component={Paper}>
+                <Table
+                  className={classes.table}
+                  size="small"
+                  aria-label="a dense table"
+                >
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>ID</TableCell>
+                      <TableCell align="right">DATE</TableCell>
+                      <TableCell align="right">TOTAL&nbsp;($)</TableCell>
+                      <TableCell align="right">PAID</TableCell>
+                      <TableCell align="right">DELIVERED</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {orders &&
+                      orders.map((order) => (
+                        <TableRow key={order._id}>
+                          <TableCell component="th" scope="row">
+                            {order._id}
+                          </TableCell>
+                          <TableCell align="right">
+                            {order.createdAt.substring(0, 10)}
+                          </TableCell>
+                          <TableCell align="right">
+                            {order.totalPrice}
+                          </TableCell>
+                          <TableCell align="right">
+                            {order.isPaid ? (
+                              <Typography style={{ color: "green" }}>
+                                {order.paidAt.substring(0, 10)}
+                              </Typography>
+                            ) : (
+                              <HighlightOffIcon style={{ color: "red" }} />
+                            )}
+                          </TableCell>
+                          <TableCell align="right">
+                            {order.isDelivered ? (
+                              <Typography style={{ color: "green" }}>
+                                order.deliveredAt.substring(0, 10)
+                              </Typography>
+                            ) : (
+                              <HighlightOffIcon style={{ color: "red" }} />
+                            )}
+                          </TableCell>
+                          <TableCell>
+                            <Button
+                              size="small"
+                              variant="outlined"
+                              onClick={() =>
+                                history.push(`/orders/${order._id}`)
+                              }
+                            >
+                              Details
+                            </Button>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
             </Grid>
           </div>
         </Grid>

@@ -34,6 +34,9 @@ const Form = ({
   setConfirmPassword,
   isRegisterForm,
   submitBtnText,
+  children,
+  isUserEditForm,
+  isProductEditForm,
 }) => {
   const classes = useStyles();
   const [showPassword, setShowPassword] = useState(false);
@@ -48,67 +51,75 @@ const Form = ({
 
   return (
     <Grid container justifyContent="space-between">
-      {isRegisterForm && (
+      {isRegisterForm ||
+        ((isUserEditForm || isProductEditForm) && (
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="name-input">Name</InputLabel>
+            <Input
+              erro={error && true}
+              id="name-input"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="show name icon"
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    <PersonIcon />
+                  </IconButton>
+                </InputAdornment>
+              }
+            />
+          </FormControl>
+        ))}
+
+      {!isProductEditForm && (
         <FormControl className={classes.formControl}>
-          <InputLabel htmlFor="name-input">Name</InputLabel>
+          <InputLabel htmlFor="email-input">Email</InputLabel>
           <Input
             erro={error && true}
-            id="name-input"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            id="email-input"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  aria-label="show name icon"
+                  aria-label="show email icon"
                   onMouseDown={(e) => e.preventDefault()}
                 >
-                  <PersonIcon />
+                  <EmailIcon />
                 </IconButton>
               </InputAdornment>
             }
           />
         </FormControl>
       )}
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="email-input">Email</InputLabel>
-        <Input
-          erro={error && true}
-          id="email-input"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="show email icon"
-                onMouseDown={(e) => e.preventDefault()}
-              >
-                <EmailIcon />
-              </IconButton>
-            </InputAdornment>
-          }
-        />
-      </FormControl>
-      <FormControl className={classes.formControl}>
-        <InputLabel htmlFor="password-input">Password</InputLabel>
-        <Input
-          error={error && true}
-          id="password-input"
-          type={showPassword ? "text" : "password"}
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleShowPassword}
-                onMouseDown={(e) => e.preventDefault()}
-              >
-                {showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-          }
-        />
-      </FormControl>
+
+      {password || setPassword ? (
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="password-input">Password</InputLabel>
+          <Input
+            error={error && true}
+            id="password-input"
+            type={showPassword ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleShowPassword}
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+      ) : null}
+
       {isRegisterForm && (
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="confirm-password-input">
@@ -134,6 +145,8 @@ const Form = ({
           />
         </FormControl>
       )}
+      {/* include other fields as children */}
+      {children}
       <FormControl className={classes.formControl}>
         <Button onClick={handleFormSubmit} variant="outlined" color="primary">
           {submitBtnText}
@@ -145,6 +158,8 @@ const Form = ({
 
 Form.defaultProps = {
   isRegisterForm: false,
+  isUserEditForm: false,
+  isProductEditForm: false,
 };
 
 export default Form;

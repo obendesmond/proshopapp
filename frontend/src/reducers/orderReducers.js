@@ -8,6 +8,7 @@ import {
   ORDER_GET_FAIL,
   ORDER_GET_REQUEST,
   ORDER_GET_SUCCESS,
+  ORDER_GET_RESET,
   ORDER_PAY_FAIL,
   ORDER_PAY_REQUEST,
   ORDER_PAY_RESET,
@@ -35,6 +36,8 @@ export const orderGetReducer = (state = { orders: [] }, action) => {
       return { loading: false, orders: action.payload };
     case ORDER_GET_FAIL:
       return { loading: false, error: action.payload };
+    case ORDER_GET_RESET:
+      return { orders: [] };
     default:
       return state;
   }

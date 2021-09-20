@@ -88,6 +88,7 @@ const Header = (props) => {
   const history = useHistory();
   const dispatch = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [adminAnchorEl, setAdminAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
   const cart = useSelector((state) => state.cart);
   const { cartItems } = cart;
@@ -96,9 +97,14 @@ const Header = (props) => {
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+  const isAdminMenuOpen = Boolean(adminAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
+  };
+
+  const handleAdminMenuOpen = (event) => {
+    setAdminAnchorEl(event.currentTarget);
   };
 
   const handleMobileMenuClose = () => {
@@ -110,6 +116,11 @@ const Header = (props) => {
     handleMobileMenuClose();
   };
 
+  const handleAdminMenuClose = () => {
+    setAdminAnchorEl(null);
+    handleMobileMenuClose();
+  };
+
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
@@ -117,6 +128,18 @@ const Header = (props) => {
   const handleProfile = () => {
     handleMenuClose();
     history.push("/profile");
+  };
+
+  const handleAdminRoute = (to) => {
+    handleAdminMenuClose();
+    // 1 for users, 2 for products and 3 for orders
+    if (to === 1) {
+      history.push("/admin/users");
+    } else if (to === 2) {
+      history.push("/admin/products");
+    } else if (to === 3) {
+      history.push("/admin/orders");
+    }
   };
 
   const handleLogout = () => {
@@ -142,6 +165,38 @@ const Header = (props) => {
         <MenuItem>Profile</MenuItem>
       </Link>
       <MenuItem onClick={() => handleLogout()}>Logout</MenuItem>
+    </Menu>
+  );
+
+  const adminMenuId = "admin-menu-id";
+  const renderAdminMenu = (
+    <Menu
+      anchorEl={adminAnchorEl}
+      anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      id={adminMenuId}
+      keepMounted
+      transformOrigin={{ vertical: "top", horizontal: "right" }}
+      open={isAdminMenuOpen}
+      onClose={handleAdminMenuClose}
+    >
+      <Link
+        style={{ textDecoration: "none", color: "inherit" }}
+        onClick={() => handleAdminRoute(1)}
+      >
+        <MenuItem>Users</MenuItem>
+      </Link>
+      <Link
+        style={{ textDecoration: "none", color: "inherit" }}
+        onClick={() => handleAdminRoute(2)}
+      >
+        <MenuItem>Products</MenuItem>
+      </Link>
+      <Link
+        style={{ textDecoration: "none", color: "inherit" }}
+        onClick={() => handleAdminRoute(3)}
+      >
+        <MenuItem>Orders</MenuItem>
+      </Link>
     </Menu>
   );
 
@@ -183,6 +238,11 @@ const Header = (props) => {
             <AccountCircle />
           </IconButton>
           <p>Signin</p>
+        </MenuItem>
+      )}
+      {userInfo && userInfo.isAdmin && (
+        <MenuItem onClick={handleAdminMenuOpen}>
+          <p>ADMIN</p>
         </MenuItem>
       )}
     </Menu>
@@ -241,6 +301,12 @@ const Header = (props) => {
                 <AccountCircle />
               </IconButton>
             )}
+            &nbsp;&nbsp;&nbsp;
+            {userInfo && userInfo.isAdmin && (
+              <Button size="small" onClick={handleAdminMenuOpen}>
+                ADMIN
+              </Button>
+            )}
           </div>
           <div className={classes.sectionMobile}>
             <IconButton
@@ -257,6 +323,7 @@ const Header = (props) => {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
+      {renderAdminMenu}
     </div>
   );
 };

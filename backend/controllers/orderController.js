@@ -39,13 +39,13 @@ export const addOrderItems = asyncHandler(async (req, res) => {
   }
 });
 
-// @desc GET all orders from db
-// @route GET /api/orders
+// @desc GET all logged in user orders
+// @route GET /api/orders/myorders
 // @access Private
-export const getOrders = asyncHandler(async (req, res) => {
+export const getMyOrders = asyncHandler(async (req, res) => {
   try {
-    // get all orders
-    const orders = await Order.find({});
+    // get all users orders
+    const orders = await Order.find({ user: req.user._id });
 
     res.status(200).json(orders);
   } catch (error) {
@@ -77,10 +77,11 @@ export const getOrderById = asyncHandler(async (req, res) => {
 export const updateOrderToPaid = asyncHandler(async (req, res) => {
   // get specific order and add the users name and email too
   const order = await Order.findById(req.params.id);
+  console.log("order id: " + order._id);
 
   if (order) {
     order.isPaid = true;
-    order.paidAt = date.now();
+    order.paidAt = Date.now();
     // payment result from paypal
     order.paymentResult = {
       id: req.body.id,

@@ -13,6 +13,7 @@ import {
   ORDER_PAY_REQUEST,
   ORDER_PAY_SUCCESS,
 } from "../constants/orderConstants";
+import { CART_RESET_ITEM } from "../constants/cartConstants";
 
 export const createOrder = (order) => async (dispatch, getState) => {
   try {
@@ -34,6 +35,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
     const { data } = await axios.post("/api/orders", order, config);
 
     dispatch({ type: ORDER_CREATE_SUCCESS, payload: data });
+    dispatch({ type: CART_RESET_ITEM });
   } catch (error) {
     dispatch({
       type: ORDER_CREATE_FAIL,
@@ -45,7 +47,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
   }
 };
 
-// get all orders
+// get all users orders
 export const getOrders = () => async (dispatch, getState) => {
   try {
     dispatch({ type: ORDER_GET_REQUEST });
@@ -56,12 +58,11 @@ export const getOrders = () => async (dispatch, getState) => {
 
     const config = {
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
 
-    const { data } = await axios.get("/api/orders", config);
+    const { data } = await axios.get("/api/orders/myorders", config);
 
     dispatch({ type: ORDER_GET_SUCCESS, payload: data });
   } catch (error) {
@@ -131,6 +132,7 @@ export const payOrder =
       );
 
       dispatch({ type: ORDER_PAY_SUCCESS, payload: data });
+      dispatch({ type: CART_RESET_ITEM });
     } catch (error) {
       dispatch({
         type: ORDER_PAY_FAIL,

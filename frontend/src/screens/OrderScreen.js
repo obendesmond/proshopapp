@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { PayPalButton } from "react-paypal-button-v2";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails } from "../actions/orderActions";
+import { getOrderDetails, payOrder } from "../actions/orderActions";
 import Loader from "../components/Loader/Loader";
 import Message from "../components/Message/Message";
 import {
@@ -14,6 +15,7 @@ import {
   makeStyles,
   Typography,
 } from "@material-ui/core";
+import { ORDER_PAY_RESET } from "../constants/orderConstants";
 
 const useStyles = makeStyles((theme) => ({
   space: {
@@ -84,6 +86,7 @@ const OrderScreen = (props) => {
       };
 
       if (!order || successPay || order._id !== id) {
+        dispatch({ type: ORDER_PAY_RESET });
         dispatch(getOrderDetails(id));
       } else if (!order.isPaid) {
         if (!window.paypal) {
@@ -96,6 +99,11 @@ const OrderScreen = (props) => {
   }, [id, dispatch, history, userInfo, order, successPay]);
 
   const { shippingAddress, paymentMethod } = order;
+
+  const successPaymentHandler = (paymentResult) => {
+    console.log(paymentResult);
+    dispatch(payOrder(order._id, paymentResult));
+  };
 
   return loading ? (
     <Loader size={100} />
@@ -219,6 +227,20 @@ const OrderScreen = (props) => {
                       </Typography>
                     </strong>
                   </Grid>
+                  {!order.isPay && (
+                    <Grid item xs={12} className={classes.space}>
+                      {loadingPay && <span> loading pay</span>}
+                      {!sdkReady ? (
+                        // <span> sdk not ready</span>
+                        <Loader />
+                      ) : (
+                        <PayPalButton
+                          amount={order.totalPrice}
+                          onSuccess={successPaymentHandler}
+                        />
+                      )}
+                    </Grid>
+                  )}
                 </Grid>
               </CardContent>
             </Card>
