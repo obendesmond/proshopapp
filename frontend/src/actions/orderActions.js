@@ -12,6 +12,12 @@ import {
   ORDER_PAY_FAIL,
   ORDER_PAY_REQUEST,
   ORDER_PAY_SUCCESS,
+  ORDER_GET_ALL_REQUEST,
+  ORDER_GET_ALL_SUCCESS,
+  ORDER_GET_ALL_FAIL,
+  ORDER_DELIVER_REQUEST,
+  ORDER_DELIVER_SUCCESS,
+  ORDER_DELIVER_FAIL,
 } from "../constants/orderConstants";
 import { CART_RESET_ITEM } from "../constants/cartConstants";
 
@@ -143,3 +149,66 @@ export const payOrder =
       });
     }
   };
+
+// get all orders in db
+export const getAllOrders = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_GET_ALL_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get("/api/orders", config);
+
+    dispatch({ type: ORDER_GET_ALL_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ORDER_GET_ALL_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+// order deliver action
+export const deliverOrder = (order) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: ORDER_DELIVER_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    // configure header and send Bearer token, it's a get req so we don't need content type
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.put(
+      `/api/orders/${order._id}/deliver`,
+      {},
+      config
+    );
+
+    dispatch({ type: ORDER_DELIVER_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: ORDER_DELIVER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};

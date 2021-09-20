@@ -3,19 +3,28 @@ import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { getOrderDetails, payOrder } from "../actions/orderActions";
+import {
+  getOrderDetails,
+  payOrder,
+  deliverOrder,
+} from "../actions/orderActions";
 import Loader from "../components/Loader/Loader";
 import Message from "../components/Message/Message";
+import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import {
   Button,
   Card,
   CardContent,
   Divider,
   Grid,
+  IconButton,
   makeStyles,
   Typography,
 } from "@material-ui/core";
-import { ORDER_PAY_RESET } from "../constants/orderConstants";
+import {
+  ORDER_PAY_RESET,
+  ORDER_DELIVER_RESET,
+} from "../constants/orderConstants";
 
 const useStyles = makeStyles((theme) => ({
   space: {
@@ -43,6 +52,13 @@ const OrderScreen = (props) => {
 
   const orderPay = useSelector((state) => state.orderPay);
   const { loading: loadingPay, success: successPay } = orderPay;
+
+  const orderDeliver = useSelector((state) => state.orderDeliver);
+  const {
+    loading: loadingDeliver,
+    success: successDeliver,
+    error: errorDeliver,
+  } = orderDeliver;
 
   // if loading is finished
   if (!loading) {
@@ -85,8 +101,10 @@ const OrderScreen = (props) => {
         document.body.appendChild(script);
       };
 
-      if (!order || successPay || order._id !== id) {
+      if (!order || successPay || successDeliver || order._id !== id) {
         dispatch({ type: ORDER_PAY_RESET });
+        dispatch({ type: ORDER_DELIVER_RESET });
+
         dispatch(getOrderDetails(id));
       } else if (!order.isPaid) {
         if (!window.paypal) {
@@ -96,7 +114,7 @@ const OrderScreen = (props) => {
         }
       }
     }
-  }, [id, dispatch, history, userInfo, order, successPay]);
+  }, [id, dispatch, history, userInfo, order, successPay, successDeliver]);
 
   const { shippingAddress, paymentMethod } = order;
 
@@ -105,12 +123,16 @@ const OrderScreen = (props) => {
     dispatch(payOrder(order._id, paymentResult));
   };
 
-  return loading ? (
+  const deliverHandler = () => {
+    dispatch(deliverOrder(order));
+  };
+
+  return loading || loadingDeliver ? (
     <Loader size={100} />
-  ) : error ? (
+  ) : error || errorDeliver ? (
     <Message
       severity="error"
-      message={error}
+      message={error ? error : errorDeliver}
       open={open}
       close={() => setOpen(false)}
     />
@@ -121,6 +143,17 @@ const OrderScreen = (props) => {
         justifyContent="space-between"
         style={{ marginTop: "20px" }}
       >
+        <Grid container style={{ paddingLeft: "50px" }}>
+          <Grid item>
+            <IconButton
+              aria-label="show 4 new mails"
+              color="inherit"
+              onClick={() => history.goBack()}
+            >
+              <KeyboardBackspaceIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
         <Grid container direction="row" justifyContent="space-between">
           <Grid item sm={12} md={8}>
             <Grid container alignItems="center">
@@ -227,9 +260,8 @@ const OrderScreen = (props) => {
                       </Typography>
                     </strong>
                   </Grid>
-                  {!order.isPay && (
+                  {order.isPay ? null : (
                     <Grid item xs={12} className={classes.space}>
-                      {loadingPay && <span> loading pay</span>}
                       {!sdkReady ? (
                         // <span> sdk not ready</span>
                         <Loader />
@@ -241,6 +273,21 @@ const OrderScreen = (props) => {
                       )}
                     </Grid>
                   )}
+                  {userInfo &&
+                    userInfo.isAdmin &&
+                    order.isPaid &&
+                    !order.isDelivered && (
+                      <Grid item xs={12} className={classes.space}>
+                        <Button
+                          style={{ width: "100%" }}
+                          onClick={deliverHandler}
+                          variant="outlined"
+                          color="primary"
+                        >
+                          Mark as Delivered
+                        </Button>
+                      </Grid>
+                    )}
                 </Grid>
               </CardContent>
             </Card>
@@ -251,12 +298,12 @@ const OrderScreen = (props) => {
           justifyContent="space-between"
           style={{ margin: "20px 0 50px 0" }}
         >
-          <Button onClick={() => {}} variant="outlined" color="primary">
+          {/* <Button onClick={() => {}} variant="outlined" color="primary">
             Back To Payment
           </Button>
           <Button onClick={() => {}} variant="outlined" color="primary">
             Place Order Now!!
-          </Button>
+          </Button> */}
         </Grid>
       </Grid>
     )

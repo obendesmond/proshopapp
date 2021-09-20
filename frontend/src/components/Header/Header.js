@@ -237,7 +237,6 @@ const Header = (props) => {
           >
             <AccountCircle />
           </IconButton>
-          <p>Signin</p>
         </MenuItem>
       )}
       {userInfo && userInfo.isAdmin && (

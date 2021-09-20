@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
 import Message from "../components/Message/Message";
 import Loader from "../components/Loader/Loader";
 import {
@@ -17,6 +18,7 @@ import {
   Input,
   InputLabel,
   IconButton,
+  Button,
 } from "@material-ui/core";
 import KeyboardBackspaceIcon from "@material-ui/icons/KeyboardBackspace";
 import Form from "../components/Form/Form";
@@ -52,6 +54,7 @@ const ProductEditScreen = (props) => {
   const [category, setCategory] = useState("");
   const [countInStock, setCountInStock] = useState(0);
   const [description, setDescription] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const id = props.match.params.id;
 
@@ -106,6 +109,35 @@ const ProductEditScreen = (props) => {
     );
   };
 
+  const uploadHandler = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+    setUploading(true);
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+
+      const { data } = await axios.post("/api/upload", formData, config);
+
+      const prevImage = product.image;
+      // delete previous image
+      await axios.post("/api/upload/deletePrevImage", prevImage, config);
+
+      // the data that comes back is the path
+      setImage(data);
+      console.log(data);
+      setUploading(false);
+    } catch (error) {
+      console.log(error);
+      setUploading(false);
+    }
+  };
+
   return (
     <Container maxwidth="sm">
       <Grid container style={{ paddingLeft: "50px" }}>
@@ -113,7 +145,7 @@ const ProductEditScreen = (props) => {
           <IconButton
             aria-label="show 4 new mails"
             color="inherit"
-            onClick={() => history.push("/admin/products")}
+            onClick={() => history.goBack()}
           >
             <KeyboardBackspaceIcon />
           </IconButton>
@@ -201,6 +233,29 @@ const ProductEditScreen = (props) => {
                     value={image}
                     onChange={(e) => setImage(e.target.value)}
                   />
+                </FormControl>
+                <FormControl className={classes.formControl}>
+                  <input
+                    accept="image/*"
+                    className={classes.input}
+                    id="upload-file"
+                    type="file"
+                    style={{ display: "none" }}
+                    onChange={uploadHandler}
+                  />
+                  <label htmlFor="upload-file">
+                    {uploading ? (
+                      <Loader size={40} />
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        component="span"
+                      >
+                        Upload
+                      </Button>
+                    )}
+                  </label>
                 </FormControl>
               </Form>
             </CardContent>

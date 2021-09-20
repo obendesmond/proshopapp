@@ -95,7 +95,7 @@ const UserEditScreen = (props) => {
           <IconButton
             aria-label="show 4 new mails"
             color="inherit"
-            onClick={() => history.push("/admin/users")}
+            onClick={() => history.goBack()}
           >
             <KeyboardBackspaceIcon />
           </IconButton>

@@ -25,6 +25,8 @@ import {
   orderGetReducer,
   orderDetailsReducer,
   orderPayReducer,
+  orderGetAllReducer,
+  orderDeliverReducer,
 } from "./reducers/orderReducers";
 
 // combine reducers
@@ -46,6 +48,8 @@ const reducer = combineReducers({
   orderGet: orderGetReducer,
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
+  orderGetAll: orderGetAllReducer,
+  orderDeliver: orderDeliverReducer,
 });
 
 // get cart items from local storage if it's present and convert it to normal JS from JSON format

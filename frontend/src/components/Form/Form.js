@@ -51,28 +51,27 @@ const Form = ({
 
   return (
     <Grid container justifyContent="space-between">
-      {isRegisterForm ||
-        ((isUserEditForm || isProductEditForm) && (
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="name-input">Name</InputLabel>
-            <Input
-              erro={error && true}
-              id="name-input"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    aria-label="show name icon"
-                    onMouseDown={(e) => e.preventDefault()}
-                  >
-                    <PersonIcon />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-        ))}
+      {(isRegisterForm || isUserEditForm || isProductEditForm) && (
+        <FormControl className={classes.formControl}>
+          <InputLabel htmlFor="name-input">Name</InputLabel>
+          <Input
+            erro={error && true}
+            id="name-input"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="show name icon"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  <PersonIcon />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+      )}
 
       {!isProductEditForm && (
         <FormControl className={classes.formControl}>

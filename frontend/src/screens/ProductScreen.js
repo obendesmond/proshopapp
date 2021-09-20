@@ -66,7 +66,7 @@ const ProductScreen = (props) => {
           <IconButton
             aria-label="show 4 new mails"
             color="inherit"
-            onClick={() => history.push("/")}
+            onClick={() => history.goBack()}
           >
             <KeyboardBackspaceIcon />
           </IconButton>

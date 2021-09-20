@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import { Link } from "react-router-dom";
 import {
   deleteProduct,
   listProducts,
@@ -142,7 +143,14 @@ const ProductListScreen = () => {
                       <TableCell component="th" scope="row">
                         {p._id}
                       </TableCell>
-                      <TableCell align="left">{p.name}</TableCell>
+                      <TableCell align="left">
+                        <Link
+                          style={{ cursor: "pointer" }}
+                          to={`/product/${p._id}`}
+                        >
+                          {p.name}
+                        </Link>
+                      </TableCell>
                       <TableCell align="left">{p.email}</TableCell>
                       <TableCell align="left">${p.price}</TableCell>
                       <TableCell align="left">{p.category}</TableCell>
