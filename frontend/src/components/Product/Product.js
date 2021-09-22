@@ -11,6 +11,7 @@ import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles({
   root: {
+    // maxWidth: 345,
     maxWidth: 345,
   },
   media: {
@@ -18,14 +19,15 @@ const useStyles = makeStyles({
   },
 });
 
-const Product = ({ product }) => {
+const Product = ({ product, isProductCarousel }) => {
   const classes = useStyles();
   const history = useHistory();
 
   return (
     <Card
-      raised
-      className={classes.root}
+      raised={isProductCarousel ? false : true}
+      // className={!isProductCarousel && classes.root}
+      style={{ maxWidth: isProductCarousel ? 600 : 345 }}
       onClick={() => history.push(`/product/${product._id}`)}
     >
       <CardActionArea>
@@ -34,25 +36,33 @@ const Product = ({ product }) => {
           image={product.image}
           title="Contemplative Reptile"
         />
-        <CardContent>
-          <Typography gutterBottom variant="h5" component="h2">
-            {product.name}
-          </Typography>
-          <Typography variant="body2" color="textSecondary" component="p">
-            <Rating
-              value={product.rating}
-              text={`${product.numReviews} reviews`}
-            />
-          </Typography>
-        </CardContent>
+        {!isProductCarousel && (
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {product.name}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              <Rating
+                value={product.rating}
+                text={`${product.numReviews} reviews`}
+              />
+            </Typography>
+          </CardContent>
+        )}
       </CardActionArea>
-      <CardActions>
-        <Typography variant="h4">
-          <b>${product.price}</b>
-        </Typography>
-      </CardActions>
+      {!isProductCarousel && (
+        <CardActions>
+          <Typography variant="h4">
+            <b>${product.price}</b>
+          </Typography>
+        </CardActions>
+      )}
     </Card>
   );
+};
+
+Product.defaultProps = {
+  isProductCarousel: false,
 };
 
 export default Product;

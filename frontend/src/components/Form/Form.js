@@ -33,6 +33,7 @@ const Form = ({
   confirmPassword,
   setConfirmPassword,
   isRegisterForm,
+  isReviewForm,
   submitBtnText,
   children,
   isUserEditForm,
@@ -73,7 +74,7 @@ const Form = ({
         </FormControl>
       )}
 
-      {!isProductEditForm && (
+      {!isProductEditForm && !isReviewForm && (
         <FormControl className={classes.formControl}>
           <InputLabel htmlFor="email-input">Email</InputLabel>
           <Input
@@ -159,6 +160,7 @@ Form.defaultProps = {
   isRegisterForm: false,
   isUserEditForm: false,
   isProductEditForm: false,
+  isReviewForm: false,
 };
 
 export default Form;

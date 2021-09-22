@@ -23,6 +23,7 @@ import Form from "../components/Form/Form";
 import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 import { useHistory } from "react-router-dom";
 import { getOrders } from "../actions/orderActions";
+import { USER_UPDATE_PROFILE_RESET } from "../constants/userConstants";
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -83,7 +84,8 @@ const ProfileScreen = () => {
     if (!userInfo) {
       history.push("/login");
     } else {
-      if (!user || !user.name) {
+      if (!user || !user.name || success) {
+        dispatch({ type: USER_UPDATE_PROFILE_RESET });
         dispatch(getUserDetails("profile"));
         dispatch(getOrders());
       } else {
@@ -91,7 +93,7 @@ const ProfileScreen = () => {
         setEmail(user.email);
       }
     }
-  }, [dispatch, history, userInfo, user]);
+  }, [dispatch, history, userInfo, user, success]);
 
   const handleProfileUpdate = () => {
     if (confirmPassword !== password) {

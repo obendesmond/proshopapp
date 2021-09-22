@@ -24,6 +24,7 @@ import {
 import { PRODUCT_CREATE_RESET } from "../constants/productConstants";
 import DataTable from "../components/DataTable/DataTable";
 import AddIcon from "@material-ui/icons/Add";
+import Paginate from "../components/Paginate/Paginate";
 
 const useStyles = makeStyles((theme) => ({
   orderCard: {
@@ -31,11 +32,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const ProductListScreen = () => {
+const ProductListScreen = (props) => {
   const classes = useStyles();
   const history = useHistory();
   const dispatch = useDispatch();
   const [open, setOpen] = useState(true);
+  const pageNumber = props.match.params.pageNumber || 1;
+  const [page, setPage] = React.useState(pageNumber);
 
   const productDelete = useSelector((state) => state.productDelete);
   const {
@@ -48,7 +51,7 @@ const ProductListScreen = () => {
   const { userInfo } = userLogin;
 
   const productList = useSelector((state) => state.productList);
-  const { products, loading, error } = productList;
+  const { products, loading, error, pages } = productList;
 
   const productCreate = useSelector((state) => state.productCreate);
   const {
@@ -67,7 +70,8 @@ const ProductListScreen = () => {
     if (successCreate) {
       history.push(`/admin/products/${createdProduct._id}/edit`);
     } else {
-      dispatch(listProducts());
+      // '' for empty keyword
+      dispatch(listProducts("", pageNumber));
     }
   }, [
     dispatch,
@@ -76,6 +80,7 @@ const ProductListScreen = () => {
     successDelete,
     createdProduct,
     successCreate,
+    pageNumber,
   ]);
 
   const deleteHandler = (id, name) => {
@@ -91,6 +96,11 @@ const ProductListScreen = () => {
 
   const createProductHandler = () => {
     dispatch(createProduct());
+  };
+
+  const handlePageChange = (event, value) => {
+    setPage(value);
+    history.push(`/admin/products/${value}`);
   };
 
   return (
@@ -168,6 +178,13 @@ const ProductListScreen = () => {
                     </TableRow>
                   ))
                 }
+              />
+            </Grid>
+            <Grid container justifyContent="center">
+              <Paginate
+                page={page}
+                handlePageChange={handlePageChange}
+                pages={pages}
               />
             </Grid>
           </div>

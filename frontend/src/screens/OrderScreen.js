@@ -51,7 +51,7 @@ const OrderScreen = (props) => {
   const { loading, error, order } = orderDetails;
 
   const orderPay = useSelector((state) => state.orderPay);
-  const { loading: loadingPay, success: successPay } = orderPay;
+  const { success: successPay } = orderPay;
 
   const orderDeliver = useSelector((state) => state.orderDeliver);
   const {
