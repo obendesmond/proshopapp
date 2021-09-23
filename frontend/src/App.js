@@ -16,6 +16,7 @@ import ProductListScreen from "./screens/ProductListScreen";
 import OrderListScreen from "./screens/OrderListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
 import ProductEditScreen from "./screens/ProductEditScreen";
+import Features from "./screens/Features";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
       <main>
         <Container>
           <Route path="/login" component={LoginScreen} exact />
+          <Route path="/features" component={Features} exact />
           <Route path="/register" component={RegisterScreen} exact />
           <Route path="/profile" component={ProfileScreen} exact />
           <Route path="/admin/users" component={UserListScreen} exact />

@@ -172,6 +172,11 @@ const Header = (props) => {
       open={isMobileMenuOpen}
       onClose={handleMobileMenuClose}
     >
+      <MenuItem onClick={() => history.push("/features")}>
+        <Button variant="outlined" size="small" color="primary">
+          App Features
+        </Button>
+      </MenuItem>
       <MenuItem onClick={() => history.push("/cart")}>
         <IconButton aria-label="show 4 new mails" color="inherit">
           <Badge badgeContent={cartItems.length} color="secondary">
@@ -223,6 +228,14 @@ const Header = (props) => {
           <SearchBox />
           <div className={classes.grow} />
           <div className={classes.sectionDesktop}>
+            <Button
+              variant="outlined"
+              size="small"
+              color="primary"
+              onClick={() => history.push("/features")}
+            >
+              App Features
+            </Button>
             <IconButton
               aria-label="show 4 new mails"
               color="inherit"

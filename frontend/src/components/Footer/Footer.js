@@ -2,6 +2,8 @@ import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Grid } from "@material-ui/core";
 
+const DesmondInc = "/images/DesmondInc.png";
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
@@ -13,6 +15,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     color: "white",
   },
+  desmondInc: {
+    textAlign: "center",
+  },
 }));
 
 const Footer = () => {
@@ -22,6 +27,13 @@ const Footer = () => {
       <Grid container>
         <Grid className={classes.copy} item xs={12}>
           Copyright &copy; ProShop
+        </Grid>
+        <Grid className={classes.desmondInc} item xs={12}>
+          <img
+            style={{ height: "80px" }}
+            src={DesmondInc}
+            alt="Ako Desmond Oben"
+          />
         </Grid>
       </Grid>
     </div>
