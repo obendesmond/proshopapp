@@ -97,6 +97,8 @@ const LoginScreen = (props) => {
               Register Instead
             </span>
           </Typography>
+          <Typography>email:admin@example.com | pass:123456</Typography>
+          <Typography>email:jane@example.com | pass:123456</Typography>
         </CardActions>
       </Card>
     </Container>
