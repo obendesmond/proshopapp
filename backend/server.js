@@ -25,10 +25,6 @@ if (process.env.NODE_ENV === "development") {
 // allow us pass json data through the body
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
-
 // mount product routes
 app.use("/api/products", productRoutes);
 
@@ -49,6 +45,21 @@ app.use("/api/upload", uploadRoutes);
 // make /uploads folder static so that it can be called from the browser
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
+// for deploying
+if (process.env.NODE_ENV === "production") {
+  // set build folder to a static folder
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+  // point any route to index.html in static folder
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 // false url middleware handler
 app.use(notFound);
